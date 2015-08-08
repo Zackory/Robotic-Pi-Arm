@@ -12,6 +12,7 @@ pwm.start(1)
 time.sleep(1)
 
 for i in np.arange(1, 14, 0.5):
+    print i
     pwm.ChangeDutyCycle(i)
     time.sleep(1)
 
