@@ -1,7 +1,7 @@
 import RPi.GPIO as gpio
 
 gpio.setmode(gpio.BOARD)
-gpio.setup(11, gpio.out)
+gpio.setup(11, gpio.OUT)
 
 pwm = gpio.PWM(11, 50)
 
