@@ -1,6 +1,6 @@
 import lightblue
 
-port = 0
+port = 1
 s = lightblue.socket()
 s.bind(('', port))
 s.listen(1)
