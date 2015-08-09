@@ -7,11 +7,12 @@ gpio.setup(11, gpio.OUT)
 
 pwm = gpio.PWM(11, 50)
 
-pwm.start(1)
+pwm.start(2.5)
 
 time.sleep(1)
 
-for i in np.arange(1, 14, 0.5):
+# Min 2, Max 12.5
+for i in np.arange(1.5, 14, 0.5):
     print i
     pwm.ChangeDutyCycle(i)
     time.sleep(1)
