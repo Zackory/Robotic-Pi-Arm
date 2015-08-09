@@ -18,5 +18,8 @@ for i in np.arange(2.5, 13, 0.5):
     pwm.ChangeDutyCycle(i)
     time.sleep(1)
 
+pwm.ChangeDutyCycle(7.5)
+time.sleep(1)
+
 pwm.stop()
 gpio.cleanup()
