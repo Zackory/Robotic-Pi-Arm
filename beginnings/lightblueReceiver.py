@@ -1,7 +1,6 @@
 import lightblue
-import bluetooth
 
-port = bluetooth.get_available_port(bluetooth.RFCOMM)
+port = 5
 s = lightblue.socket()
 s.bind(('', port))
 s.listen(1)
