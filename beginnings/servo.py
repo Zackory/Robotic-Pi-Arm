@@ -7,12 +7,13 @@ gpio.setup(11, gpio.OUT)
 
 pwm = gpio.PWM(11, 50)
 
-pwm.start(2.5)
+# Start at center point (90 degrees)
+pwm.start(7.5)
 
 time.sleep(1)
 
-# Min 2, Max 12.5
-for i in np.arange(1.5, 14, 0.5):
+# Min 2.5 (0 degrees), Max 12.5 (180 degrees)
+for i in np.arange(2.5, 13, 0.5):
     print i
     pwm.ChangeDutyCycle(i)
     time.sleep(1)
