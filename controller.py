@@ -1,10 +1,6 @@
 import pygame
 import lightblue
 
-def angleToPos(angle):
-    # Min 2.5 (0 degrees), Max 12.5 (180 degrees)
-    return angle / 180.0 * 10.0 + 2.5
-
 # Connect to bluetooth on Raspberry Pi
 s = lightblue.socket()
 s.connect(('00:0A:3A:84:1F:A6', 5))
@@ -43,7 +39,7 @@ while not done:
     elif keys[pygame.K_RIGHT] and gripper > 25:
         gripper -= 1
 
-    s.send('%f,%f,%f,%f' % (angleToPos(base), angleToPos(arm), angleToPos(forearm), angleToPos(gripper)))
+    s.send('%f,%f,%f,%f' % (base, arm, forearm, gripper))
 
 s.send('Done')
 
