@@ -1,11 +1,11 @@
 import lightblue
 import RPi.GPIO as gpio
 
-def createPWMs(ports):
+def createPWMs(ports, hz=100):
     for i in ports:
         gpio.setup(i, gpio.OUT)
-    # Setup pwm ports using 50 Hz
-    return [gpio.PWM(i, 50) for i in ports]
+    # Setup pwm ports using specified Hz
+    return [gpio.PWM(i, hz) for i in ports]
 
 def angleToPos(angle, hz=100):
     # For 50 Hz: Min 2.5 (0 degrees), Max 12.5 (180 degrees)
@@ -20,7 +20,7 @@ base, arm, forearm, gripper = createPWMs([11, 12, 15, 16])
 base.start(angleToPos(90))
 arm.start(angleToPos(90))
 forearm.start(angleToPos(90))
-gripper.start(angleToPos(45))
+gripper.start(angleToPos(10))
 
 # Initialize bluetooth on a specific port
 port = 5
@@ -40,11 +40,11 @@ while True:
         print 'Done command received'
         break
     baseAngle, armAngle, forearmAngle, gripperAngle = data.split(',')
-    # base.ChangeDutyCycle(basePos)
-    # arm.ChangeDutyCycle(armPos)
-    # forearm.ChangeDutyCycle(forearmPos)
-    # gripper.ChangeDutyCycle(gripperPos)
-    print 'Received [%s]' % data
+    base.ChangeDutyCycle(angleToPos(baseAngle))
+    arm.ChangeDutyCycle(angleToPos(armAngle))
+    forearm.ChangeDutyCycle(angleToPos(forearmAngle))
+    gripper.ChangeDutyCycle(angleToPos(gripperAngle))
+    # print 'Received [%s]' % data
 
 # Close bluetooth
 connection.close()
