@@ -29,9 +29,9 @@ while not done:
                 keys[pygame.K_UP], keys[pygame.K_DOWN], keys[pygame.K_LEFT], keys[pygame.K_RIGHT]]):
         continue
 
-    if keys[pygame.K_d] and base < 180:
+    if keys[pygame.K_a] and base < 180:
         base += 1
-    if keys[pygame.K_a] and base > 0:
+    if keys[pygame.K_d] and base > 0:
         base -= 1
 
     if keys[pygame.K_w] and arm < 180:
