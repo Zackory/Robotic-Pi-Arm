@@ -44,7 +44,7 @@ while not done:
     elif keys[pygame.K_DOWN] and forearm > 1:
         forearm -= 1
 
-    if keys[pygame.K_LEFT] and gripper < 60:
+    if keys[pygame.K_LEFT] and gripper < 50:
         gripper += 1
     elif keys[pygame.K_RIGHT] and gripper > 10:
         gripper -= 1
