@@ -39,7 +39,7 @@ while True:
     if data == 'Done':
         print 'Done command received'
         break
-    baseAngle, armAngle, forearmAngle, gripperAngle = data.split(',')
+    baseAngle, armAngle, forearmAngle, gripperAngle = (float(angle) for angle in data.split(','))
     base.ChangeDutyCycle(angleToPos(baseAngle))
     arm.ChangeDutyCycle(angleToPos(armAngle))
     forearm.ChangeDutyCycle(angleToPos(forearmAngle))
