@@ -79,23 +79,33 @@ while not done:
 
     if axis(Axis.RThumbX) >= 0.1 and basePos < 175:
         basePos += axis(Axis.RThumbX)*5
+        baseChange = True
     if axis(Axis.RThumbX) <= -0.1 and basePos > 5:
         basePos += axis(Axis.RThumbX)*5
+        baseChange = True
 
     if axis(Axis.RThumbY) >= 0.1 and armPos < 175:
         armPos += axis(Axis.RThumbY)*5
+        armChange = True
     if axis(Axis.RThumbY) <= -0.1 and armPos > 5:
         armPos += axis(Axis.RThumbY)*5
+        armChange = True
 
     if axis(Axis.LThumbY) >= 0.1 and forearmPos < 175:
         forearmPos += axis(Axis.LThumbY)*5
+        forearmChange = True
     if axis(Axis.LThumbY) <= -0.1 and forearmPos > 5:
         forearmPos += axis(Axis.LThumbY)*5
+        forearmChange = True
 
     if button(Button.X) and gripperPos < 70:
         gripperPos += 1
+        gripperChange = True
     elif button(Button.B) and gripperPos > 25:
         gripperPos -= 1
+        gripperChange = True
+
+    print 'BasePos:', basePos, 'armPos:', armPos, 'forearmPos:', forearmPos, 'gripperPos:', gripperPos
 
     # Update servo positions
     if baseChange:
