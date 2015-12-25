@@ -88,33 +88,25 @@ while not done:
     forearmChange = False
     gripperChange = False
 
-    mag = 5
+    mag = 30
 
-    if axis(Axis.RThumbX) >= 0.1 and basePos < 2000 - mag:
-        basePos += axis(Axis.RThumbX)*mag
-        baseChange = True
-    if axis(Axis.RThumbX) <= -0.1 and basePos > 1000 + mag:
-        basePos += axis(Axis.RThumbX)*mag
+    if (axis(Axis.RThumbX) <= -0.1 and basePos < 2000 - mag) or \
+            (axis(Axis.RThumbX) >= 0.1 and basePos > 1000 + mag):
+        basePos -= axis(Axis.RThumbX)*mag
         baseChange = True
 
-    if axis(Axis.RThumbY) >= 0.1 and armPos < 2000 - mag:
-        armPos += axis(Axis.RThumbY)*mag
-        armChange = True
-    if axis(Axis.RThumbY) <= -0.1 and armPos > 1000 + mag:
+    if (axis(Axis.RThumbY) >= 0.1 and armPos < 2000 - mag) or \
+            (axis(Axis.RThumbY) <= -0.1 and armPos > 1000 + mag):
         armPos += axis(Axis.RThumbY)*mag
         armChange = True
 
-    if axis(Axis.LThumbY) >= 0.1 and forearmPos < 2000 - mag:
-        forearmPos += axis(Axis.LThumbY)*mag
-        forearmChange = True
-    if axis(Axis.LThumbY) <= -0.1 and forearmPos > 1000 + mag:
-        forearmPos += axis(Axis.LThumbY)*mag
+    if (axis(Axis.LThumbY) <= -0.1 and forearmPos < 2000 - mag) or \
+            (axis(Axis.LThumbY) >= 0.1 and forearmPos > 1000 + mag):
+        forearmPos -= axis(Axis.LThumbY)*mag
         forearmChange = True
 
-    if axis(Axis.LThumbX) >= 0.1 and gripperPos < 1000 - mag:
-        gripperPos += axis(Axis.LThumbX)*mag
-        gripperChange = True
-    if axis(Axis.LThumbX) <= -0.1 and gripperPos > 700 + mag:
+    if (axis(Axis.LThumbX) >= 0.1 and gripperPos < 1000 - mag) or \
+            (axis(Axis.LThumbX) <= -0.1 and gripperPos > 700 + mag):
         gripperPos += axis(Axis.LThumbX)*mag
         gripperChange = True
 
