@@ -19,6 +19,7 @@ class Axis:
     RTrigger = 5
 
 def angleToPos(angle, hz=100):
+    return angle
     # For 50 Hz: Min 2.5 (0 degrees), Max 12.5 (180 degrees)
     # For 100 Hz: Min 5 (0 degrees), Max 26 (180 degrees)
     scale = (hz - 50.0) / 50.0 + 1.0
@@ -59,12 +60,10 @@ if joystick.get_numaxes() < 6:
 
 gpio = pigpio.pi()
 
-# gpio.setmode(gpio.BOARD)
-# base, arm, forearm, gripper = createPWMs([11, 12, 15, 16])
-base, arm, forearm, gripper = [11, 12, 15, 16]
+base, arm, forearm, gripper = [17, 18, 22, 23]
 
-for g in [11, 12, 15, 16]:
-    gpio.set_mode(g, pigpio.OUTPUT)
+# for g in [11, 12, 15, 16]:
+#     gpio.set_mode(g, pigpio.OUTPUT)
 
 # Start servos at center points
 gpio.set_PWM_dutycycle(base, angleToPos(basePos))
