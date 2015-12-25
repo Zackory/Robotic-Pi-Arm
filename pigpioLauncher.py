@@ -63,6 +63,9 @@ gpio = pigpio.pi()
 # base, arm, forearm, gripper = createPWMs([11, 12, 15, 16])
 base, arm, forearm, gripper = [11, 12, 15, 16]
 
+for g in [11, 12, 15, 16]:
+    gpio.set_mode(g, pigpio.OUTPUT)
+
 # Start servos at center points
 gpio.set_PWM_dutycycle(base, angleToPos(basePos))
 gpio.set_PWM_dutycycle(arm, angleToPos(armPos))
