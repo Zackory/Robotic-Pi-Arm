@@ -1,3 +1,5 @@
+__author__ = 'zackory'
+
 import os
 import time
 import pygame

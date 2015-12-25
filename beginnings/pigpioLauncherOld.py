@@ -2,7 +2,7 @@ __author__ = 'zackory'
 
 import time
 import pygame
-import RPi.GPIO as gpio
+import pigpio
 
 class Button:
     A = 0
@@ -20,24 +20,15 @@ class Axis:
     RThumbY = 4
     RTrigger = 5
 
-def createPWMs(ports, hz=100):
-    for i in ports:
-        gpio.setup(i, gpio.OUT)
-    # Setup pwm ports using specified Hz
-    return [gpio.PWM(i, hz) for i in ports]
-
 def angleToPos(angle, hz=100):
-    # For 50 Hz: Min 2.5 (0 degrees), Max 12.5 (180 degrees)
-    # For 100 Hz: Min 5 (0 degrees), Max 26 (180 degrees)
-    scale = (hz - 50.0) / 50.0 + 1.0
-    return (angle / 180.0 * 10.0 + 2.5) * scale
+    return 1000 + angle/180.0 * 1000.0
 
 # Initialize servo positions
 done = False
 basePos = 90
 armPos = 90
 forearmPos = 75
-gripperPos = 10
+gripperPos = -50
 
 # Initialize joystick
 pygame.init()
@@ -65,14 +56,18 @@ if joystick.get_numaxes() < 6:
         RThumbY = 3
         Unknown = 4
 
-gpio.setmode(gpio.BOARD)
-base, arm, forearm, gripper = createPWMs([11, 12, 15, 16])
+gpio = pigpio.pi()
+
+base, arm, forearm, gripper = [17, 18, 22, 23]
+
+# for g in [11, 12, 15, 16]:
+#     gpio.set_mode(g, pigpio.OUTPUT)
 
 # Start servos at center points
-base.start(angleToPos(basePos))
-arm.start(angleToPos(armPos))
-forearm.start(angleToPos(forearmPos))
-gripper.start(angleToPos(gripperPos))
+gpio.set_servo_pulsewidth(base, angleToPos(basePos))
+gpio.set_servo_pulsewidth(arm, angleToPos(armPos))
+gpio.set_servo_pulsewidth(forearm, angleToPos(forearmPos))
+gpio.set_servo_pulsewidth(gripper, angleToPos(gripperPos))
 
 # Helper functions
 def button(i):
@@ -120,24 +115,24 @@ while not done:
         forearmPos += axis(Axis.LThumbY)*5
         forearmChange = True
 
-    if button(Button.X) and gripperPos < 40:
-        gripperPos += 1
+    if axis(Axis.LThumbX) >= 0.1 and gripperPos < 0:
+        gripperPos += axis(Axis.LThumbX)*5
         gripperChange = True
-    elif button(Button.B) and gripperPos > 10:
-        gripperPos -= 1
+    if axis(Axis.LThumbX) <= -0.1 and gripperPos > -50:
+        gripperPos += axis(Axis.LThumbX)*5
         gripperChange = True
 
     print 'BasePos:', basePos, 'armPos:', armPos, 'forearmPos:', forearmPos, 'gripperPos:', gripperPos
 
     # Update servo positions
     if baseChange:
-        base.ChangeDutyCycle(angleToPos(basePos))
+        gpio.set_servo_pulsewidth(base, angleToPos(basePos))
     if armChange:
-        arm.ChangeDutyCycle(angleToPos(armPos))
+        gpio.set_servo_pulsewidth(arm, angleToPos(armPos))
     if forearmChange:
-        forearm.ChangeDutyCycle(angleToPos(forearmPos))
+        gpio.set_servo_pulsewidth(forearm, angleToPos(forearmPos))
     if gripperChange:
-        gripper.ChangeDutyCycle(angleToPos(gripperPos))
+        gpio.set_servo_pulsewidth(gripper, angleToPos(gripperPos))
 
     # Wait a little
     time.sleep(0.05)
@@ -148,8 +143,8 @@ pygame.joystick.quit()
 pygame.quit()
 
 # Stop servos
-base.stop()
-arm.stop()
-forearm.stop()
-gripper.stop()
-gpio.cleanup()
+gpio.set_servo_pulsewidth(base, 0)
+gpio.set_servo_pulsewidth(arm, 0)
+gpio.set_servo_pulsewidth(forearm, 0)
+gpio.set_servo_pulsewidth(gripper, 0)
+gpio.stop()

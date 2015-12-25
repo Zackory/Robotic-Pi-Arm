@@ -1,3 +1,5 @@
+__author__ = 'zackory'
+
 import lightblue
 import RPi.GPIO as gpio
 

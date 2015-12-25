@@ -1,3 +1,5 @@
+__author__ = 'zackory'
+
 import time
 import pygame
 import pigpio
@@ -18,20 +20,12 @@ class Axis:
     RThumbY = 4
     RTrigger = 5
 
-def angleToPos(angle, hz=100):
-    return 1000 + angle/180.0 * 1000.0
-    # return angle
-    # For 50 Hz: Min 2.5 (0 degrees), Max 12.5 (180 degrees)
-    # For 100 Hz: Min 5 (0 degrees), Max 26 (180 degrees)
-    scale = (hz - 50.0) / 50.0 + 1.0
-    return (angle / 180.0 * 10.0 + 2.5) * scale
-
 # Initialize servo positions
 done = False
-basePos = 90
-armPos = 90
-forearmPos = 75
-gripperPos = 10
+basePos = 1500 # 1000 low, 2000 high
+armPos = 1500 # 1000 low, 2000 high
+forearmPos = 1400 # 1000 low, 2000 high
+gripperPos = 750 # 700 low, 1000 high
 
 # Initialize joystick
 pygame.init()
@@ -63,14 +57,11 @@ gpio = pigpio.pi()
 
 base, arm, forearm, gripper = [17, 18, 22, 23]
 
-# for g in [11, 12, 15, 16]:
-#     gpio.set_mode(g, pigpio.OUTPUT)
-
 # Start servos at center points
-gpio.set_servo_pulsewidth(base, angleToPos(basePos))
-gpio.set_servo_pulsewidth(arm, angleToPos(armPos))
-gpio.set_servo_pulsewidth(forearm, angleToPos(forearmPos))
-gpio.set_servo_pulsewidth(gripper, angleToPos(gripperPos))
+gpio.set_servo_pulsewidth(base, basePos)
+gpio.set_servo_pulsewidth(arm, armPos)
+gpio.set_servo_pulsewidth(forearm, forearmPos)
+gpio.set_servo_pulsewidth(gripper, gripperPos)
 
 # Helper functions
 def button(i):
@@ -97,45 +88,47 @@ while not done:
     forearmChange = False
     gripperChange = False
 
-    if axis(Axis.RThumbX) >= 0.1 and basePos < 175:
-        basePos += axis(Axis.RThumbX)*5
+    mag = 5
+
+    if axis(Axis.RThumbX) >= 0.1 and basePos < 2000 - mag:
+        basePos += axis(Axis.RThumbX)*mag
         baseChange = True
-    if axis(Axis.RThumbX) <= -0.1 and basePos > 5:
-        basePos += axis(Axis.RThumbX)*5
+    if axis(Axis.RThumbX) <= -0.1 and basePos > 1000 + mag:
+        basePos += axis(Axis.RThumbX)*mag
         baseChange = True
 
-    if axis(Axis.RThumbY) >= 0.1 and armPos < 175:
-        armPos += axis(Axis.RThumbY)*5
+    if axis(Axis.RThumbY) >= 0.1 and armPos < 2000 - mag:
+        armPos += axis(Axis.RThumbY)*mag
         armChange = True
-    if axis(Axis.RThumbY) <= -0.1 and armPos > 5:
-        armPos += axis(Axis.RThumbY)*5
+    if axis(Axis.RThumbY) <= -0.1 and armPos > 1000 + mag:
+        armPos += axis(Axis.RThumbY)*mag
         armChange = True
 
-    if axis(Axis.LThumbY) >= 0.1 and forearmPos < 175:
-        forearmPos += axis(Axis.LThumbY)*5
+    if axis(Axis.LThumbY) >= 0.1 and forearmPos < 2000 - mag:
+        forearmPos += axis(Axis.LThumbY)*mag
         forearmChange = True
-    if axis(Axis.LThumbY) <= -0.1 and forearmPos > 5:
-        forearmPos += axis(Axis.LThumbY)*5
+    if axis(Axis.LThumbY) <= -0.1 and forearmPos > 1000 + mag:
+        forearmPos += axis(Axis.LThumbY)*mag
         forearmChange = True
 
-    if button(Button.X) and gripperPos < 40:
-        gripperPos += 1
+    if axis(Axis.LThumbX) >= 0.1 and gripperPos < 1000 - mag:
+        gripperPos += axis(Axis.LThumbX)*mag
         gripperChange = True
-    elif button(Button.B) and gripperPos > 10:
-        gripperPos -= 1
+    if axis(Axis.LThumbX) <= -0.1 and gripperPos > 700 + mag:
+        gripperPos += axis(Axis.LThumbX)*mag
         gripperChange = True
 
     print 'BasePos:', basePos, 'armPos:', armPos, 'forearmPos:', forearmPos, 'gripperPos:', gripperPos
 
     # Update servo positions
     if baseChange:
-        gpio.set_servo_pulsewidth(base, angleToPos(basePos))
+        gpio.set_servo_pulsewidth(base, basePos)
     if armChange:
-        gpio.set_servo_pulsewidth(arm, angleToPos(armPos))
+        gpio.set_servo_pulsewidth(arm, armPos)
     if forearmChange:
-        gpio.set_servo_pulsewidth(forearm, angleToPos(forearmPos))
+        gpio.set_servo_pulsewidth(forearm, forearmPos)
     if gripperChange:
-        gpio.set_servo_pulsewidth(gripper, angleToPos(gripperPos))
+        gpio.set_servo_pulsewidth(gripper, gripperPos)
 
     # Wait a little
     time.sleep(0.05)

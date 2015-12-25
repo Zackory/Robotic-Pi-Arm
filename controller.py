@@ -1,3 +1,5 @@
+__author__ = 'zackory'
+
 import time
 import pygame
 import lightblue
