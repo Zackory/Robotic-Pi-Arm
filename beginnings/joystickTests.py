@@ -21,7 +21,7 @@ class Axis:
 done = False
 basePos = 90
 armPos = 90
-forearmPos = 90
+forearmPos = 75
 gripperPos = 10
 
 # Initialize joystick
@@ -30,6 +30,25 @@ pygame.joystick.init()
 joystick = pygame.joystick.Joystick(0)
 joystick.init()
 print 'Joystick initalized, press A to exit'
+
+# Fix error of triggers not appearing as axes
+if joystick.get_numaxes() < 6:
+    class Button:
+        A = 0 # Triangle
+        B = 1 # O
+        X = 2 # X
+        Y = 3 # Square
+        LBumper = 4
+        RBumper = 5
+        LTrigger = 6
+        RTrigger = 7
+
+    class Axis:
+        LThumbX = 0
+        LThumbY = 1
+        RThumbX = 2
+        RThumbY = 3
+        Unknown = 4
 
 # Helper functions
 def button(i):
@@ -73,9 +92,9 @@ while not done:
     if axis(Axis.LThumbY) <= -0.1 and forearmPos > 5:
         forearmPos += axis(Axis.LThumbY)*5
 
-    if button(Button.X) and gripperPos < 70:
+    if button(Button.X) and gripperPos < 40:
         gripperPos += 1
-    elif button(Button.B) and gripperPos > 25:
+    elif button(Button.B) and gripperPos > 10:
         gripperPos -= 1
 
 # Quit joystick control

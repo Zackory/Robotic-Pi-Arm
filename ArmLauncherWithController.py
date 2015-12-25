@@ -33,8 +33,8 @@ def angleToPos(angle, hz=100):
 # Initialize servo positions
 done = False
 basePos = 90
-armPos = 60
-forearmPos = 60
+armPos = 90
+forearmPos = 75
 gripperPos = 10
 
 # Initialize joystick
@@ -44,10 +44,29 @@ joystick = pygame.joystick.Joystick(0)
 joystick.init()
 print 'Joystick initalized, press A to exit'
 
+# Fix error of triggers not appearing as axes
+if joystick.get_numaxes() < 6:
+    class Button:
+        A = 0 # Triangle
+        B = 1 # O
+        X = 2 # X
+        Y = 3 # Square
+        LBumper = 4
+        RBumper = 5
+        LTrigger = 6
+        RTrigger = 7
+
+    class Axis:
+        LThumbX = 0
+        LThumbY = 1
+        RThumbX = 2
+        RThumbY = 3
+        Unknown = 4
+
 gpio.setmode(gpio.BOARD)
 base, arm, forearm, gripper = createPWMs([11, 12, 15, 16])
 
-# Start servos at center point (90 degrees)
+# Start servos at center points
 base.start(angleToPos(basePos))
 arm.start(angleToPos(armPos))
 forearm.start(angleToPos(forearmPos))
@@ -99,10 +118,10 @@ while not done:
         forearmPos += axis(Axis.LThumbY)*5
         forearmChange = True
 
-    if button(Button.X) and gripperPos < 70:
+    if button(Button.X) and gripperPos < 40:
         gripperPos += 1
         gripperChange = True
-    elif button(Button.B) and gripperPos > 25:
+    elif button(Button.B) and gripperPos > 10:
         gripperPos -= 1
         gripperChange = True
 
