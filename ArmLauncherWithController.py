@@ -1,3 +1,4 @@
+import time
 import pygame
 import RPi.GPIO as gpio
 
@@ -32,8 +33,8 @@ def angleToPos(angle, hz=100):
 # Initialize servo positions
 done = False
 basePos = 90
-armPos = 90
-forearmPos = 90
+armPos = 60
+forearmPos = 60
 gripperPos = 10
 
 # Initialize joystick
@@ -116,6 +117,9 @@ while not done:
         forearm.ChangeDutyCycle(angleToPos(forearmPos))
     if gripperChange:
         gripper.ChangeDutyCycle(angleToPos(gripperPos))
+
+    # Wait a little
+    time.sleep(0.05)
 
 # Quit joystick control
 joystick.quit()
