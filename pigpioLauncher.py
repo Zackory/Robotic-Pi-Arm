@@ -1,5 +1,9 @@
 __author__ = 'zackory'
 
+# Check out the pigpio library
+# http://abyz.co.uk/rpi/pigpio/download.html
+# http://abyz.co.uk/rpi/pigpio/python.html
+
 import time
 import pygame
 import pigpio
@@ -95,7 +99,7 @@ while not done:
         basePos -= axis(Axis.RThumbX)*mag
         baseChange = True
 
-    if (axis(Axis.RThumbY) >= 0.1 and armPos < 2000 - mag) or \
+    if (axis(Axis.RThumbY) >= 0.1 and armPos < 2200 - mag) or \
             (axis(Axis.RThumbY) <= -0.1 and armPos > 1000 + mag):
         armPos += axis(Axis.RThumbY)*mag
         armChange = True
